@@ -23,6 +23,7 @@ import android.view.SurfaceView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
@@ -56,7 +57,7 @@ public class GameActivity extends AppCompatActivity {
 
     long lastFrameTime;
     int fps;
-    int score;
+    int score,bestScore=0;
 
 
     int [] snakeX;
@@ -118,7 +119,7 @@ public class GameActivity extends AppCompatActivity {
         public void getApple(){
             Random random = new Random();
             appleX = random.nextInt(numBlocksWide-1)+1;
-            appleY = random.nextInt(numBlocksHigh-1)+1;
+            appleY = random.nextInt(numBlocksHigh-10);
         }
 
 
@@ -204,8 +205,17 @@ public class GameActivity extends AppCompatActivity {
                 canvas.drawColor(Color.BLACK);
                 paint.setColor(Color.argb(255, 255, 255, 255));
                 paint.setTextSize(topGap/2);
-                canvas.drawText("Score:" + score, 10, topGap-6, paint);
+                canvas.drawText("Puntuación:" + score, 10, topGap-6, paint);
+                canvas.drawText("Mejor puntuación:" + bestScore, 480, topGap-6, paint);
 
+                //guarda la mejor puntuación
+                ArrayList<Integer> scores = new ArrayList<>();
+                scores.add(score);
+                for(int i = 0; i<scores.size(); i++){
+                    if(scores.get(i) >=bestScore){
+                        bestScore = scores.get(i);
+                    }
+                }
                 //para dibujar las 4 líneas blancas
                 //habría que tocar la línea de abajo que se sobre sale
                 paint.setStrokeWidth(8);
