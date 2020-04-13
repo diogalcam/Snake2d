@@ -29,6 +29,7 @@ public class GameActivity extends AppCompatActivity {
     //EN ESTA CLASE HE ARREGLADO VARIAS COSAS PERO AÚN HAY COSAS POR ARREGLAR , LA LÍNEA DE ABAJO BLANCA NO SALE NO HE CONSEGUIDO
     //ARREGLARLO .
     // Y TAMBIÉN ME GUSTARÍA PONER LA MANZANA MÁS GRANDE PERO NO LO HE CONSEGUIDO
+    //ARREGLADO YA LUL
     Canvas canvas;
     SnakeView snakeView;
 
@@ -80,6 +81,7 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
+    //la interfaz runnable vamos a usarla para manejar los hilos cuando se sale del juego , paramos, pausamos ,etc.
     public class SnakeView extends SurfaceView implements Runnable {
         Thread ourThread = null;
         SurfaceHolder ourHolder;
@@ -119,7 +121,7 @@ public class GameActivity extends AppCompatActivity {
             appleY = random.nextInt(numBlocksHigh-1)+1;
         }
 
-        @Override
+
         public void run() {
             while (playingSnake) {
                 updateGame();
@@ -132,7 +134,7 @@ public class GameActivity extends AppCompatActivity {
 
         public void updateGame() {
 
-            //Si el la serpiente ha cogido una manzana , aumenta de tamaño y aparece otra manzana random en el mapa
+            //Si el la serpiente ha cogido una manzana , aumenta de tamaño y aparece otra manzana random en el mapa , además aumenta la puntuación
             if(snakeX[0] == appleX && snakeY[0] == appleY){
                 snakeLength++;
                 getApple();
@@ -172,7 +174,8 @@ public class GameActivity extends AppCompatActivity {
             if(snakeX[0] == -1)dead=true;
             if(snakeX[0] >= numBlocksWide)dead=true;
             if(snakeY[0] == -1)dead=true;
-            if(snakeY[0] == numBlocksHigh)dead=true;
+            if(snakeY[0] == numBlocksHigh-6)dead=true;
+            //if(snakeX[0] == (numBlocksHigh*blockSize) && snakeY[0] == (numBlocksHigh*blockSize)) dead=true;
             //si nos comemos a nosotros mismos
             for (int i = snakeLength-1; i > 0; i--) {
                 if ((i > 4) && (snakeX[0] == snakeX[i]) && (snakeY[0] == snakeY[i])) {
@@ -205,10 +208,10 @@ public class GameActivity extends AppCompatActivity {
 
                 //para dibujar las 4 líneas blancas
                 //habría que tocar la línea de abajo que se sobre sale
-                paint.setStrokeWidth(1);
+                paint.setStrokeWidth(8);
                 canvas.drawLine(1,topGap,screenWidth-1,topGap,paint);
                 canvas.drawLine(screenWidth-1,topGap,screenWidth-1,topGap+(numBlocksHigh*blockSize),paint);
-                canvas.drawLine(screenWidth-1,topGap+(numBlocksHigh*blockSize),1,topGap+(numBlocksHigh*blockSize),paint);
+                canvas.drawLine(screenWidth-1,(numBlocksHigh*blockSize)-50,1,(numBlocksHigh*blockSize)-50,paint);
                 canvas.drawLine(1,topGap, 1,topGap+(numBlocksHigh*blockSize), paint);
 
                 //dibuja la serpiente
@@ -313,7 +316,7 @@ public class GameActivity extends AppCompatActivity {
         snakeView.pause();
     }
 
-    //para volver al menú le damos para atrás
+    //para volver al menú le damos para atrás y volvemos a la clase Main
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
@@ -369,20 +372,20 @@ public class GameActivity extends AppCompatActivity {
 
         //Determina cuantos bloques habran en altura y anchura
         //le restamos topGap porque es ahí donde pondremos el score
-        numBlocksWide = 40;
+        numBlocksWide = 40; //podríamos haber puesto screenWeeight-topGap/bs , pero así va flama también
         numBlocksHigh = ((screenHeight - topGap ))/blockSize;
 
         //decodificamos las imagenes que tenemos de la cabeza , cuerpo , cola y manzana
         headBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.head);
         bodyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.body);
         tailBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tail);
-        appleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.apple);
+        appleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.apple2);
 
         //escala las imagenes de bitmap al tamaño de los bloques que habíamos calculado anteriormente
         headBitmap = Bitmap.createScaledBitmap(headBitmap, blockSize, blockSize, false);
         bodyBitmap = Bitmap.createScaledBitmap(bodyBitmap, blockSize, blockSize, false);
         tailBitmap = Bitmap.createScaledBitmap(tailBitmap, blockSize, blockSize, false);
-        appleBitmap = Bitmap.createScaledBitmap(appleBitmap, blockSize, blockSize, false);
+        appleBitmap = Bitmap.createScaledBitmap(appleBitmap, blockSize+20, blockSize+20, false);
 
     }
 }
