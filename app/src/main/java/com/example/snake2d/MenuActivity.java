@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,9 +14,21 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.Task;
+import com.mongodb.lang.NonNull;
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.core.auth.StitchUser;
+import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
+
+import java.util.ResourceBundle;
+
 public class MenuActivity extends AppCompatActivity {
     private Button button1;
     private TextView textView2;
+    ResourceBundle resources;
+    StitchAppClient stitchClient;
     //le metemos musica de fondo al menu? taría canelita
 
     //Para el menú podríamos ponerle un LinearLayout vertical , estaba probando con el ConstraintLayout
@@ -39,6 +52,10 @@ public class MenuActivity extends AppCompatActivity {
                 openActivity2();
             }
         });
+
+        stitchClient = Stitch.getDefaultAppClient();
+        Log.d("stitch", "logging in anonymously");
+        stitchClient.getAuth().loginWithCredential(new AnonymousCredential());
 
     }
 
