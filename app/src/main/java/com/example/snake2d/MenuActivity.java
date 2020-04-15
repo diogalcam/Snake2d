@@ -36,6 +36,8 @@ import java.util.ResourceBundle;
 public class MenuActivity extends AppCompatActivity {
     private Button button1;
     private TextView textView2;
+    private Button button2;
+    public RemoteMongoCollection<Document> datos;
     ResourceBundle resources;
     StitchAppClient stitchClient;
     //le metemos musica de fondo al menu? taría canelita
@@ -62,6 +64,16 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
+        //el botón de marcadores lleva a una pestaña en la que se muestran los 10 o 15 o los que nos salgan de los huevos mejores resultados de la base de datos
+        button2 = (Button) findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                openActivity3();
+            }
+        });
+
+
+        //Se conecta a la base de datos y coge lo que hay
         final StitchAppClient client =
                 Stitch.initializeDefaultAppClient("snake2d-deosi");
 
@@ -71,6 +83,7 @@ public class MenuActivity extends AppCompatActivity {
         final RemoteMongoCollection<Document> coll =
                 mongoClient.getDatabase("snake").getCollection("snake");
 
+        datos = coll;
 
         client.getAuth().loginWithCredential(new AnonymousCredential()).continueWithTask(
                 new Continuation<StitchUser, Task<RemoteUpdateResult>>() {
@@ -123,6 +136,11 @@ public class MenuActivity extends AppCompatActivity {
 
     public void openActivity2(){
         Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void openActivity3(){
+        Intent intent = new Intent(this,Marcador.class);
         startActivity(intent);
     }
 
