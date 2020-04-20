@@ -21,9 +21,11 @@ import com.mongodb.lang.NonNull;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.core.auth.StitchUser;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteInsertOneResult;
 import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateOptions;
 import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
@@ -40,6 +42,7 @@ public class MenuActivity extends AppCompatActivity {
     public RemoteMongoCollection<Document> datos;
     ResourceBundle resources;
     StitchAppClient stitchClient;
+
     //le metemos musica de fondo al menu? taría canelita
 
     //Para el menú podríamos ponerle un LinearLayout vertical , estaba probando con el ConstraintLayout
@@ -85,54 +88,53 @@ public class MenuActivity extends AppCompatActivity {
 
         datos = coll;
 
-        client.getAuth().loginWithCredential(new AnonymousCredential()).continueWithTask(
-                new Continuation<StitchUser, Task<RemoteUpdateResult>>() {
+        client.getAuth().loginWithCredential(new AnonymousCredential());
 
-                    @Override
-                    public Task<RemoteUpdateResult> then(@NonNull Task<StitchUser> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
 
-                        final Document updateDoc = new Document(
-                                "owner_id",
-                                task.getResult().getId()
-                        );
+        Document newItem = new Document()
+                .append("nombre", "compadre")
+                .append("puntos", 40);
 
-                        updateDoc.put("number", 42);
-                        return coll.updateOne(
-                                null, updateDoc, new RemoteUpdateOptions().upsert(true)
-                        );
-                    }
-                }
-        ).continueWithTask(new Continuation<RemoteUpdateResult, Task<List<Document>>>() {
+
+        final Task <RemoteInsertOneResult> insertTask = coll.insertOne(newItem);
+        insertTask.addOnCompleteListener(new OnCompleteListener <RemoteInsertOneResult> () {
             @Override
-            public Task<List<Document>> then(@NonNull Task<RemoteUpdateResult> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    Log.e("STITCH", "Update failed!");
-                    throw task.getException();
-                }
-                List<Document> docs = new ArrayList<>();
-                return coll
-                        .find(new Document("owner_id", client.getAuth().getUser().getId()))
-                        .limit(100)
-                        .into(docs);
-            }
-        }).addOnCompleteListener(new OnCompleteListener<List<Document>>() {
-            @Override
-            public void onComplete(@NonNull Task<List<Document>> task) {
+            public void onComplete(@NonNull Task <RemoteInsertOneResult> task) {
                 if (task.isSuccessful()) {
-                    Log.d("STITCH", "Found docs: " + task.getResult().toString());
-                    return;
+                    Log.d("app", String.format("successfully inserted item with id %s",
+                            task.getResult().getInsertedId()));
+                } else {
+                    Log.e("app", "failed to insert document with: ", task.getException());
                 }
-                Log.e("STITCH", "Error: " + task.getException().toString());
-                task.getException().printStackTrace();
             }
         });
 
 
+        //FIND
+        Document filterDoc = new Document()
+                .append("reviews.0", new Document().append("$exists", true));
+
+        RemoteFindIterable findResults = coll
+                .find(filterDoc);
+
+        Task <List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+        itemsTask.addOnCompleteListener(new OnCompleteListener <List<Document>> () {
+            @Override
+            public void onComplete(@NonNull Task<List<Document>> task) {
+                if (task.isSuccessful()) {
+                    List<Document> items = task.getResult();
+                    Log.d("app", String.format("successfully found %d documents", items.size()));
+                    for (Document item: items) {
+                        Log.d("app", String.format("successfully found:  %s", item.toString()));
+                    }
+                } else {
+                    Log.e("app", "failed to find documents with: ", task.getException());
+                }
+            }
+        });
 
     }
+
 
     public void openActivity2(){
         Intent intent = new Intent(this,MainActivity.class);
