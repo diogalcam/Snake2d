@@ -15,18 +15,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.mongodb.lang.NonNull;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.core.auth.StitchUser;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateOptions;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
+import org.bson.Document;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MenuActivity extends AppCompatActivity {
     private Button button1;
     private TextView textView2;
+    private Button button2;
+    public RemoteMongoCollection<Document> datos;
     ResourceBundle resources;
     StitchAppClient stitchClient;
     //le metemos musica de fondo al menu? taría canelita
@@ -53,14 +64,83 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
-        stitchClient = Stitch.getDefaultAppClient();
-        Log.d("stitch", "logging in anonymously");
-        stitchClient.getAuth().loginWithCredential(new AnonymousCredential());
+        //el botón de marcadores lleva a una pestaña en la que se muestran los 10 o 15 o los que nos salgan de los huevos mejores resultados de la base de datos
+        button2 = (Button) findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                openActivity3();
+            }
+        });
+
+
+        //Se conecta a la base de datos y coge lo que hay
+        final StitchAppClient client =
+                Stitch.initializeDefaultAppClient("snake2d-deosi");
+
+        final RemoteMongoClient mongoClient =
+                client.getServiceClient(RemoteMongoClient.factory, "snake");
+
+        final RemoteMongoCollection<Document> coll =
+                mongoClient.getDatabase("snake").getCollection("snake");
+
+        datos = coll;
+
+        client.getAuth().loginWithCredential(new AnonymousCredential()).continueWithTask(
+                new Continuation<StitchUser, Task<RemoteUpdateResult>>() {
+
+                    @Override
+                    public Task<RemoteUpdateResult> then(@NonNull Task<StitchUser> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+
+                        final Document updateDoc = new Document(
+                                "owner_id",
+                                task.getResult().getId()
+                        );
+
+                        updateDoc.put("number", 42);
+                        return coll.updateOne(
+                                null, updateDoc, new RemoteUpdateOptions().upsert(true)
+                        );
+                    }
+                }
+        ).continueWithTask(new Continuation<RemoteUpdateResult, Task<List<Document>>>() {
+            @Override
+            public Task<List<Document>> then(@NonNull Task<RemoteUpdateResult> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    Log.e("STITCH", "Update failed!");
+                    throw task.getException();
+                }
+                List<Document> docs = new ArrayList<>();
+                return coll
+                        .find(new Document("owner_id", client.getAuth().getUser().getId()))
+                        .limit(100)
+                        .into(docs);
+            }
+        }).addOnCompleteListener(new OnCompleteListener<List<Document>>() {
+            @Override
+            public void onComplete(@NonNull Task<List<Document>> task) {
+                if (task.isSuccessful()) {
+                    Log.d("STITCH", "Found docs: " + task.getResult().toString());
+                    return;
+                }
+                Log.e("STITCH", "Error: " + task.getException().toString());
+                task.getException().printStackTrace();
+            }
+        });
+
+
 
     }
 
     public void openActivity2(){
         Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void openActivity3(){
+        Intent intent = new Intent(this,Marcador.class);
         startActivity(intent);
     }
 
