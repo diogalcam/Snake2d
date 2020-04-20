@@ -42,6 +42,7 @@ public class MenuActivity extends AppCompatActivity {
     public RemoteMongoCollection<Document> datos;
     ResourceBundle resources;
     StitchAppClient stitchClient;
+    List<Document> items = new ArrayList<>();
 
     //le metemos musica de fondo al menu? taría canelita
 
@@ -122,7 +123,7 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<List<Document>> task) {
                 if (task.isSuccessful()) {
-                    List<Document> items = task.getResult();
+                    items = task.getResult();
                     Log.d("app", String.format("successfully found %d documents", items.size()));
                     for (Document item: items) {
                         Log.d("app", String.format("successfully found:  %s", item.toString()));
