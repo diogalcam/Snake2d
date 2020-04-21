@@ -22,6 +22,18 @@ import android.view.SurfaceView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.mongodb.lang.NonNull;
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteInsertOneResult;
+
+import org.bson.Document;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -33,7 +45,7 @@ public class GameActivity extends AppCompatActivity {
     //ARREGLADO YA LUL
     Canvas canvas;
     SnakeView snakeView;
-
+    boolean dead = false;
     Bitmap headBitmap;
     Bitmap bodyBitmap;
     Bitmap tailBitmap;
@@ -71,6 +83,7 @@ public class GameActivity extends AppCompatActivity {
     int numBlocksWide;
     int numBlocksHigh;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +92,6 @@ public class GameActivity extends AppCompatActivity {
         configureDisplay();
         snakeView = new SnakeView(this);
         setContentView(snakeView);
-
     }
 
     //la interfaz runnable vamos a usarla para manejar los hilos cuando se sale del juego , paramos, pausamos ,etc.
@@ -99,6 +111,7 @@ public class GameActivity extends AppCompatActivity {
 
             getSnake();
             getApple();
+
         }
 
         public void getSnake(){
@@ -170,7 +183,7 @@ public class GameActivity extends AppCompatActivity {
             }
 
 
-            boolean dead = false;
+             dead = false;
             //si nos estampamos contra la pared
             if(snakeX[0] == -1)dead=true;
             if(snakeX[0] >= numBlocksWide)dead=true;
@@ -186,6 +199,34 @@ public class GameActivity extends AppCompatActivity {
 
 
             if(dead){
+
+                final StitchAppClient client =
+                        Stitch.initializeDefaultAppClient("snake2d-deosi");
+
+                final RemoteMongoClient mongoClient =
+                        client.getServiceClient(RemoteMongoClient.factory, "snake");
+
+                final RemoteMongoCollection<Document> coll =
+                        mongoClient.getDatabase("snake").getCollection("snake");
+
+                //datos = coll;
+
+                client.getAuth().loginWithCredential(new AnonymousCredential());
+                Document newItem = new Document()
+                        .append("nombre", "vacíoo")
+                        .append("puntos", score);
+                final Task<RemoteInsertOneResult> insertTask = coll.insertOne(newItem);
+                insertTask.addOnCompleteListener(new OnCompleteListener<RemoteInsertOneResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task <RemoteInsertOneResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("app", String.format("successfully inserted item with id %s",
+                                    task.getResult().getInsertedId()));
+                        } else {
+                            Log.e("app", "failed to insert document with: ", task.getException());
+                        }
+                    }
+                });
                 //si muere empezamos de nuevo
                 //aquí podriamos crear otra activity con dos botones para cuando muera , que se pause la actividad de GameActivity
                 //y elegir si empezar la partida de nuevo o no.
@@ -208,6 +249,7 @@ public class GameActivity extends AppCompatActivity {
                 canvas.drawText("Puntuación:" + score, 10, topGap-6, paint);
                 canvas.drawText("Mejor puntuación:" + bestScore, 480, topGap-6, paint);
 
+
                 //guarda la mejor puntuación
                 ArrayList<Integer> scores = new ArrayList<>();
                 scores.add(score);
@@ -216,6 +258,7 @@ public class GameActivity extends AppCompatActivity {
                         bestScore = scores.get(i);
                     }
                 }
+
                 //para dibujar las 4 líneas blancas
                 //habría que tocar la línea de abajo que se sobre sale
                 paint.setStrokeWidth(8);
@@ -240,6 +283,9 @@ public class GameActivity extends AppCompatActivity {
             }
 
         }
+
+
+
 
         //es un juego basado en frames entonces tenemos que controlar los frames por segundo(fps)
         public void controlFPS() {
