@@ -27,8 +27,7 @@ public class Marcador extends AppCompatActivity {
     ResourceBundle resources;
     StitchAppClient stitchClient;
     List<Document> items = new ArrayList<>();
-    StitchAppClient client =
-            Stitch.initializeDefaultAppClient("snake2d-deosi");
+    StitchAppClient client = Stitch.getAppClient("snake2d-deosi");
 
     RemoteMongoClient mongoClient =
             client.getServiceClient(RemoteMongoClient.factory, "snake");
@@ -46,30 +45,6 @@ public class Marcador extends AppCompatActivity {
         //datos = coll;
 
         client.getAuth().loginWithCredential(new AnonymousCredential());
-
-
-        //InsertInto
-
-        /*
-        Document newItem = new Document()
-                .append("nombre", "vacío")
-                .append("puntos", 50);
-
-
-        final Task <RemoteInsertOneResult> insertTask = coll.insertOne(newItem);
-        insertTask.addOnCompleteListener(new OnCompleteListener <RemoteInsertOneResult> () {
-            @Override
-            public void onComplete(@NonNull Task <RemoteInsertOneResult> task) {
-                if (task.isSuccessful()) {
-                    Log.d("app", String.format("successfully inserted item with id %s",
-                            task.getResult().getInsertedId()));
-                } else {
-                    Log.e("app", "failed to insert document with: ", task.getException());
-                }
-            }
-        });
-        */
-
 
 
         //FIND
@@ -97,4 +72,6 @@ public class Marcador extends AppCompatActivity {
 
 
     }
-}
+
+
+    }

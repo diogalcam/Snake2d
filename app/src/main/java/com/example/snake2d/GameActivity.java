@@ -200,8 +200,7 @@ public class GameActivity extends AppCompatActivity {
 
             if(dead){
 
-                final StitchAppClient client =
-                        Stitch.initializeDefaultAppClient("snake2d-deosi");
+                StitchAppClient client = Stitch.getAppClient("snake2d-deosi");
 
                 final RemoteMongoClient mongoClient =
                         client.getServiceClient(RemoteMongoClient.factory, "snake");

@@ -77,6 +77,7 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
+        StitchAppClient client = Stitch.initializeDefaultAppClient("snake2d-deosi");
 
 
     }
