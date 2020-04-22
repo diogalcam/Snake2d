@@ -29,6 +29,7 @@ public class Nombre extends AppCompatActivity {
 
 
         buttonName = (Button) findViewById(R.id.buttonName);
+        buttonName.setText("Aceptar");
         buttonName.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 nombreARecuperar = editText.getText().toString();
