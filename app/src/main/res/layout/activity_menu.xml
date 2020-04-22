@@ -4,31 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/snake"
+    android:background="@drawable/serpifondo"
     tools:context=".MenuActivity">
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="476dp"
+        android:layout_marginTop="552dp"
         android:text="Jugar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.207"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SNAKE"
-        app:layout_constraintBottom_toTopOf="@+id/button1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.452"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.137" />
 
     <Button
         android:id="@+id/button2"
@@ -37,29 +25,21 @@
         android:text="Marcadores"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.19"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button1"
-        app:layout_constraintVertical_bias="0.358" />
+        app:layout_constraintVertical_bias="0.24" />
 
-    <ToggleButton
-        android:id="@+id/toggleButton"
+    <ImageButton
+        android:id="@+id/imageButton2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="288dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="104dp"
-        android:checked="false"
-        android:text="Musica"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textOff="Activar Musica"
-        android:textOn="Desactivar Musica"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="330dp"
+        android:layout_marginTop="193dp"
+        android:layout_marginEnd="33dp"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
-        app:layout_constraintVertical_bias="0.994" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/muteoff" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
