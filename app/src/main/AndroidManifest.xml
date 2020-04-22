@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Marcador"></activity>
+        <activity android:name=".Nombre"></activity>
+        <activity android:name=".Marcador" />
         <activity android:name=".MainActivity" />
         <activity android:name=".GameActivity" />
         <activity android:name=".MenuActivity">

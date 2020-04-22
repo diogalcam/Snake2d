@@ -59,12 +59,6 @@ public class MenuActivity extends AppCompatActivity {
         loadSound();
 
 
-
-        //el texto de SNAKE lo he puesto un poco cutre LUL pero se le podría mirar alguna manera de mejorarlo
-        //textView2 = (TextView) findViewById(R.id.textView2);
-        //textView2.setTextSize(30);
-        //textView2.setTextColor(Color.WHITE);
-
         //el botón de JUGAR(button1) . El otro botón de MARCADORES todavía no hace nada simplemente se muestra
         button1 = (Button) findViewById(R.id.button1);
         button1.setOnClickListener(new View.OnClickListener(){
@@ -98,7 +92,7 @@ public class MenuActivity extends AppCompatActivity {
 
 
     public void openActivity2(){
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(this,Nombre.class);
         startActivity(intent);
         //Si le damos a jugar se para la musica del menu
         soundPool.stop(1);
@@ -143,7 +137,6 @@ public class MenuActivity extends AppCompatActivity {
 
             descriptor = assetManager.openFd("music.ogg");
             music = soundPool.load(descriptor, 0);
-
         } catch (IOException e) {
 
             Log.e("error", "fallo al carga los sonidos");

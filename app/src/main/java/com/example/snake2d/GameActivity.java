@@ -46,6 +46,7 @@ public class GameActivity extends AppCompatActivity {
     Canvas canvas;
     SnakeView snakeView;
     boolean dead = false;
+    ArrayList<Integer> scores = new ArrayList<>();
     Bitmap headBitmap;
     Bitmap bodyBitmap;
     Bitmap tailBitmap;
@@ -83,15 +84,19 @@ public class GameActivity extends AppCompatActivity {
     int numBlocksWide;
     int numBlocksHigh;
 
-
+    String nombreARecuperar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        nombreARecuperar = getIntent().getStringExtra("nombreARecuperar");
+        Log.v("EditText", nombreARecuperar);
+        Log.v("EditText", nombreARecuperar);
         loadSound();
         configureDisplay();
         snakeView = new SnakeView(this);
         setContentView(snakeView);
+
     }
 
     //la interfaz runnable vamos a usarla para manejar los hilos cuando se sale del juego , paramos, pausamos ,etc.
@@ -212,7 +217,7 @@ public class GameActivity extends AppCompatActivity {
 
                 client.getAuth().loginWithCredential(new AnonymousCredential());
                 Document newItem = new Document()
-                        .append("nombre", "vacíoo")
+                        .append("nombre", nombreARecuperar)
                         .append("puntos", score);
                 final Task<RemoteInsertOneResult> insertTask = coll.insertOne(newItem);
                 insertTask.addOnCompleteListener(new OnCompleteListener<RemoteInsertOneResult>() {
@@ -226,6 +231,7 @@ public class GameActivity extends AppCompatActivity {
                         }
                     }
                 });
+
                 //si muere empezamos de nuevo
                 //aquí podriamos crear otra activity con dos botones para cuando muera , que se pause la actividad de GameActivity
                 //y elegir si empezar la partida de nuevo o no.
@@ -250,7 +256,7 @@ public class GameActivity extends AppCompatActivity {
 
 
                 //guarda la mejor puntuación
-                ArrayList<Integer> scores = new ArrayList<>();
+
                 scores.add(score);
                 for(int i = 0; i<scores.size(); i++){
                     if(scores.get(i) >=bestScore){
@@ -372,7 +378,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     //para volver al menú le damos para atrás y volvemos a la clase Main
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    /*public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
             snakeView.pause();
@@ -382,7 +388,7 @@ public class GameActivity extends AppCompatActivity {
             return true;
         }
         return false;
-    }
+    }*/
 
     public void loadSound(){
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);

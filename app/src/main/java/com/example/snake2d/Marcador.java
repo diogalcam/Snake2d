@@ -2,8 +2,14 @@ package com.example.snake2d;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +34,7 @@ public class Marcador extends AppCompatActivity {
     StitchAppClient stitchClient;
     List<Document> items = new ArrayList<>();
     StitchAppClient client = Stitch.getAppClient("snake2d-deosi");
+
 
     RemoteMongoClient mongoClient =
             client.getServiceClient(RemoteMongoClient.factory, "snake");
@@ -71,7 +78,9 @@ public class Marcador extends AppCompatActivity {
         });
 
 
+
     }
 
 
-    }
+}
+

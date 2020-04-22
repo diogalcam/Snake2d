@@ -12,6 +12,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     int fps;
 
     Intent i;
-
+    String nombreARecuperar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +58,12 @@ public class MainActivity extends AppCompatActivity {
         snakeAnimView = new SnakeAnimView(this);
         setContentView(snakeAnimView);
 
+        nombreARecuperar = getIntent().getStringExtra("nombreARecuperar");
+        Log.v("EditText", nombreARecuperar);
+
         i = new Intent(this,GameActivity.class);
 
+        i.putExtra("nombreARecuperar",nombreARecuperar);
 
     }
     public class SnakeAnimView extends SurfaceView implements Runnable
@@ -114,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
                 paint.setTextSize(50);
                 canvas.drawText("Pulsa para entrar en partida..",10,150,paint);
                 paint.setTextSize(25);
-
 
                 ourHolder.unlockCanvasAndPost(canvas);
 
