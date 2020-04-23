@@ -20,21 +20,31 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteDeleteResult;
 import com.mongodb.stitch.core.services.mongodb.remote.RemoteInsertOneResult;
 
 import org.bson.Document;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 
 public class Marcador extends AppCompatActivity {
+    String nombre;
+    Integer puntuacion;
     public RemoteMongoCollection<Document> datos;
     ResourceBundle resources;
     StitchAppClient stitchClient;
     List<Document> items = new ArrayList<>();
+    ArrayList objeto = new ArrayList();
     StitchAppClient client = Stitch.getAppClient("snake2d-deosi");
-
 
     RemoteMongoClient mongoClient =
             client.getServiceClient(RemoteMongoClient.factory, "snake");
@@ -74,10 +84,34 @@ public class Marcador extends AppCompatActivity {
                 } else {
                     Log.e("app", "failed to find documents with: ", task.getException());
                 }
+
+                HashMap<String,Integer> myMap = new HashMap<String,Integer>();
+                for(Document item:items){
+                    nombre = (String) item.get("nombre");
+                    puntuacion = (Integer) item.get("puntos");
+                    myMap.put(nombre,puntuacion);
+
+                }
+                //llamamos a la clase ValueComparator que extiende a comparable para ordenar por los valores del mapa
+                ValueComparator bvc =  new ValueComparator(myMap);
+
+                TreeMap<String,Integer> mapaOrdenado = new TreeMap<String,Integer>(bvc);
+                mapaOrdenado.putAll(myMap);
+
+                List<String> nombres = new ArrayList<>();
+                List<Integer> puntuacion = new ArrayList<>();
+                for(String clave: mapaOrdenado.keySet()){
+                    Integer puntos = mapaOrdenado.get(clave);
+                    Log.v("tag","Nombre->" + clave +" Puntuación->" +puntos);
+
+                    nombres.add(clave);
+                    puntuacion.add(puntos);
+
+                }
+                Log.v("tag", String.valueOf(nombres));
+                Log.v("tag", String.valueOf(puntuacion));
             }
         });
-
-
 
     }
 
