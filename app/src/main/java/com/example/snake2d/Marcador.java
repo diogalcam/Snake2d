@@ -3,6 +3,8 @@ package com.example.snake2d;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -39,6 +41,8 @@ import java.util.TreeMap;
 public class Marcador extends AppCompatActivity {
     String nombre;
     Integer puntuacion;
+    private TextView textView,textView2,textView3,textView4,textView5,textView6,textView8,textView9,textView10,textView11,textView12,textView13,
+            textView14,textView15,textView16,textView17,textView18,textView19,textView20,textView21,textView22,textView23;
     public RemoteMongoCollection<Document> datos;
     ResourceBundle resources;
     StitchAppClient stitchClient;
@@ -104,10 +108,103 @@ public class Marcador extends AppCompatActivity {
                     Integer puntos = mapaOrdenado.get(clave);
                     Log.v("tag","Nombre->" + clave +" Puntuación->" +puntos);
 
+                    //dos listas separadas sacadas del MAP ordenado para después mostrarlas
                     nombres.add(clave);
                     puntuacion.add(puntos);
 
                 }
+
+                textView = (TextView) findViewById(R.id.textView);
+                textView.setText("Nombres");
+                textView.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView8 = (TextView) findViewById(R.id.textView8);
+                textView8.setText("Puntuación");
+                textView8.setTextColor(Color.parseColor("#FFFFFF"));
+
+                //nombre con mayor puntuación empieza en la primera posición porque la lista está ordenada de mayor a menor
+                textView2 = (TextView) findViewById(R.id.textView2);
+                textView2.setText("1- "+nombres.get(0));
+                textView2.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView9 = (TextView) findViewById(R.id.textView9);
+                textView9.setText(""+puntuacion.get(0));
+                textView9.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView3 = (TextView) findViewById(R.id.textView3);
+                textView3.setText("2- "+nombres.get(1));
+                textView3.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView10 = (TextView) findViewById(R.id.textView10);
+                textView10.setText(""+puntuacion.get(1));
+                textView10.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView4 = (TextView) findViewById(R.id.textView4);
+                textView4.setText("3- "+nombres.get(2));
+                textView4.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView11 = (TextView) findViewById(R.id.textView11);
+                textView11.setText(""+puntuacion.get(2));
+                textView11.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView5 = (TextView) findViewById(R.id.textView5);
+                textView5.setText("4- "+nombres.get(3));
+                textView5.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView12 = (TextView) findViewById(R.id.textView12);
+                textView12.setText(""+puntuacion.get(3));
+                textView12.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView6 = (TextView) findViewById(R.id.textView6);
+                textView6.setText("5- "+nombres.get(4));
+                textView6.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView13 = (TextView) findViewById(R.id.textView13);
+                textView13.setText(""+puntuacion.get(4));
+                textView13.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView14 = (TextView) findViewById(R.id.textView14);
+                textView14.setText("6- "+nombres.get(5));
+                textView14.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView15 = (TextView) findViewById(R.id.textView15);
+                textView15.setText(""+puntuacion.get(5));
+                textView15.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView16 = (TextView) findViewById(R.id.textView16);
+                textView16.setText("7- "+nombres.get(6));
+                textView16.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView17 = (TextView) findViewById(R.id.textView17);
+                textView17.setText(""+puntuacion.get(6));
+                textView17.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView18 = (TextView) findViewById(R.id.textView18);
+                textView18.setText("8- "+nombres.get(7));
+                textView18.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView19 = (TextView) findViewById(R.id.textView19);
+                textView19.setText(""+puntuacion.get(7));
+                textView19.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView20 = (TextView) findViewById(R.id.textView20);
+                textView20.setText("9- "+nombres.get(8));
+                textView20.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView21 = (TextView) findViewById(R.id.textView21);
+                textView21.setText(""+puntuacion.get(8));
+                textView21.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView22 = (TextView) findViewById(R.id.textView22);
+                textView22.setText("10- "+nombres.get(9));
+                textView22.setTextColor(Color.parseColor("#FFFFFF"));
+
+                textView23 = (TextView) findViewById(R.id.textView23);
+                textView23.setText(""+puntuacion.get(9));
+                textView23.setTextColor(Color.parseColor("#FFFFFF"));
+
+
+
                 Log.v("tag", String.valueOf(nombres));
                 Log.v("tag", String.valueOf(puntuacion));
             }
