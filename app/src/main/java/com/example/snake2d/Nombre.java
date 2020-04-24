@@ -22,7 +22,7 @@ public class Nombre extends AppCompatActivity {
         setContentView(R.layout.activity_nombre);
 
         textView = (TextView) findViewById(R.id.textViewName);
-        textView.setText("Ingrese su nombre..");
+        textView.setText("Ingrese su nombre");
         textView.setTextSize(30);
 
         editText = (EditText) findViewById(R.id.editText);
