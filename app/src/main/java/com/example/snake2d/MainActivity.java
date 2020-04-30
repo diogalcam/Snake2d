@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         screenWidth = size.x;
         screenHeight = size.y;
 
-        headAnimBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.head_sprite_sheet);
+
 
         snakeAnimView = new SnakeAnimView(this);
         setContentView(snakeAnimView);
@@ -77,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
             super(context);
             ourHolder = getHolder();
             paint = new Paint();
-            frameHeight= headAnimBitmap.getHeight();
-            frameWidth = headAnimBitmap.getWidth();
 
 
         }
@@ -128,17 +126,12 @@ public class MainActivity extends AppCompatActivity {
 
         private void update() {
 
-            //which frame should be drawn
             rectToBeDrawn = new Rect((frameNumber * frameWidth) - 1,0,
                     (frameNumber * frameWidth+frameWidth)-1,frameHeight);
-
-            //now the next frame
             frameNumber++;
 
-
-            //don't try and draw frames that don't exist
             if (frameNumber == numFrames){
-                frameNumber = 0;//back to the first frame
+                frameNumber = 0;
             }
         }
 
